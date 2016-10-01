@@ -32,6 +32,7 @@ library
 executable heckle
   hs-source-dirs:    heckle
   main-is:           Main.hs
+  other-modules:     Files
   build-depends:     base >=4.7 && <5
                    , heckle
                    , directory >=1.2 && <1.3

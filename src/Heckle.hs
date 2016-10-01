@@ -26,11 +26,11 @@ import qualified Text.HTML.TagSoup as TagSoup
 import Data.Dates hiding (month)
 
 import Text.Pandoc.Definition hiding (Format)
-import Text.Pandoc.Options          (def)
-import Text.Pandoc.Readers.LaTeX    (readLaTeX)
-import Text.Pandoc.Readers.Markdown (readMarkdown)
-import Text.Pandoc.Shared           (stringify)
-import Text.Pandoc.Writers.HTML     (writeHtmlString)
+import Text.Pandoc.Options           (def)
+import Text.Pandoc.Readers.LaTeX     (readLaTeX)
+import Text.Pandoc.Readers.Markdown  (readMarkdown)
+import Text.Pandoc.Shared            (stringify)
+import Text.Pandoc.Writers.HTML      (writeHtmlString)
 
 instance Show Html where
   show = renderHtml
@@ -64,7 +64,7 @@ postsToHtml xs = do
 
 postToHtml :: Post -> Html
 postToHtml Post{..} = li ! class_ "blog-post" $ do
-  a ! class_ "post-link" ! href (stringValue ("posts/" ++ fileName ++ ext)) $ toHtml postTitle
+  a ! class_ "post-link" ! href (stringValue ("posts" </> fileName <.> ext)) $ toHtml postTitle
   H.div ! class_ "post-date" $ toHtml (displayDate postDate)
   where
     ext = getOutputExtension format
@@ -74,8 +74,8 @@ data Format = LaTeX | Markdown
   deriving (Show, Eq)
 
 getOutputExtension :: Format -> String
-getOutputExtension LaTeX    = ".pdf"
-getOutputExtension Markdown = ".html"
+getOutputExtension LaTeX    = "pdf"
+getOutputExtension Markdown = "html"
 
 -- data FileName = FileName { getFileName :: String, getExtension ::  }
 newtype Title = Title { getTitle :: String } deriving (Show, Eq, IsString, ToMarkup)
@@ -153,4 +153,4 @@ injectAt p layout insert = case splitOn p (TagSoup.parseTags layout) of
 
 writeHTML :: String -> Post -> Maybe (IO ())
 writeHTML template p@Post{..} =
-  writeFile ("posts/" <> fileName <> ".html") <$> injectTemplate template p
+  writeFile ("posts" </> fileName <.> "html") <$> injectTemplate template p
